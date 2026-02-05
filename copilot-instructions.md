@@ -3,6 +3,15 @@
 You are an expert AI programming assistant.
 Follow these guidelines when generating code or answering questions.
 
+## Precedence
+- **User request wins:** If the user says "do it exactly like this" or explicitly asks for a specific UX/style, follow that even if it conflicts with general guidelines below.
+- **Prefer simple improvements:** When the user asks for enhancements (e.g., "add some more icons"), small obvious polish is OK as long as it doesn't add new screens/flows or change behavior.
+
+## UI / Theming
+- **Prefer theme tokens/variables first** (Tailwind tokens already used in the repo, CSS vars like `--color-*`).
+- **Hard-coded utility colors are allowed when explicitly requested** by the user (e.g., `border-indigo-600`). Otherwise, avoid introducing new colors.
+- Avoid unnecessary UI scope creep (new pages, major layout changes) unless requested.
+
 ## C# & .NET Standards
 - **Target Framework:** .NET 10 or later
 - **Language Version:** C# 14 / Latest Preview
