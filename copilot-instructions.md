@@ -52,7 +52,10 @@ Follow these guidelines when generating code or answering questions.
 - **Async Naming:** Do not suffix our methods with `Async` (e.g., use `GetUser()` not `GetUserAsync()`), even if they return `Task`/`Task<T>`. **Exception:** keep `*Async` when required by an interface/override/framework contract (e.g., `GetAuthenticationStateAsync`, `DisposeAsync`, Blazor lifecycle overrides).
 - **IDE0037 (Member Simplification):** Use implicit member names: `new { Prop }`
 - **IDE0270 (Null Checks):** Prefer null-coalescing throw: `var x = y ?? throw new Exception();`
-- **IDE0305 (Collections):** Use collection expressions where appropriate: `List<int> x = [1, 2];`, `return [.. items];`
+- **IDE0305 (Collections):** Prefer collection expressions over explicit constructors/methods:
+  - Initialization: `List<int> x = [1, 2, 3];` not `new List<int> { 1, 2, 3 }`
+  - Spread: `[.. items]` not `items.ToList()`
+  - Empty: `[]` not `new List<T>()`
   - **Exception:** Avoid collection expressions inside expression trees (e.g., EF Core LINQ queries). Use `.ToList()` / explicit construction instead.
 
 ## Blazor & Frontend
