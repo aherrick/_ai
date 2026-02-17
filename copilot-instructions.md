@@ -49,6 +49,7 @@ Follow these guidelines when generating code or answering questions.
 - **RCS1261 (Async Disposal):** Use async disposal when it exists and performs I/O (streams, network, file). `MemoryStream` is fine synchronously.
 - **CA1822 (Mark Members As Static):** If a member does not access instance data, mark it `static` and call it via the type name.
 - **CA1866 (Single Character Strings):** Use char literals instead of single-character string literals. `text.StartsWith('{')` not `text.StartsWith("{")`.
+- **IDE0019 (Pattern Matching):** Prefer pattern matching over `as` + null-check (e.g., `if (x is not T t) { return; }`).
 - **Async Naming:** Do not suffix our methods with `Async` (e.g., use `GetUser()` not `GetUserAsync()`), even if they return `Task`/`Task<T>`. **Exception:** keep `*Async` when required by an interface/override/framework contract (e.g., `GetAuthenticationStateAsync`, `DisposeAsync`, Blazor lifecycle overrides).
 - **IDE0037 (Member Simplification):** Use implicit member names: `new { Prop }`
 - **IDE0270 (Null Checks):** Prefer null-coalescing throw: `var x = y ?? throw new Exception();`
@@ -57,6 +58,10 @@ Follow these guidelines when generating code or answering questions.
   - Spread: `[.. items]` not `items.ToList()`
   - Empty: `[]` not `new List<T>()`
   - **Exception:** Avoid collection expressions inside expression trees (e.g., EF Core LINQ queries). Use `.ToList()` / explicit construction instead.
+
+### Configuration & Hardcoded Defaults
+- **Do not refactor existing hardcoded strings/defaults into configuration** (e.g., `appsettings.json`, `IConfiguration`, options classes, env vars) unless explicitly requested.
+- **Preserve existing fallback defaults** when already present. Example: keep patterns like `config["AzureOpenAI:DeploymentName"] ?? "gpt-5.2-chat"` as-is; do not “clean up” by forcing configuration-only or changing the default value.
 
 ## Blazor & Frontend
 - **Dependency Injection:** Use `@inject` in `.razor` files. Use primary constructors in `.razor.cs` / services where appropriate.
