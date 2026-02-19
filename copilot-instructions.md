@@ -79,4 +79,5 @@ Follow these guidelines when generating code or answering questions.
 
 ## Testing & Validation
 - Ensure code compiles with the project’s analyzers and strict checks.
+- In any file you modify, fix active analyzer messages before finishing (especially `CA1822` and `IDE0028`/collection simplifications).
 - Prefer `var` when the type is obvious.
