@@ -20,9 +20,9 @@ Follow these guidelines when generating code or answering questions.
 
 ### Constructors & DI
 - **Primary Constructors:** Prefer primary constructors for DI-friendly services and simple classes.
-  - Use regular constructors only when required (inheritance/base chaining, multiple constructors, attributes/serialization, tooling constraints).
-  - *Bad:* `public class Service { private readonly IHttp _http; public Service(IHttp http) { _http = http; } }`
-  - *Good:* `public class Service(IHttp http)`
+	- Use regular constructors only when required (inheritance/base chaining, multiple constructors, attributes/serialization, tooling constraints).
+	- *Bad:* `public class Service { private readonly IHttp _http; public Service(IHttp http) { _http = http; } }`
+	- *Good:* `public class Service(IHttp http)`
 
 ### Namespaces
 - **File-scoped namespaces only:** `namespace My.Namespace;`
@@ -47,17 +47,19 @@ Follow these guidelines when generating code or answering questions.
 - **RCS1021 (Expression Body):** Prefer expression-bodied members for simple, single-expression methods/properties.
 - **RCS1037 (Whitespace):** No trailing whitespace on any line.
 - **RCS1261 (Async Disposal):** Use async disposal when it exists and performs I/O (streams, network, file). `MemoryStream` is fine synchronously.
-- **CA1822 (Mark Members As Static):** If a member does not access instance data, mark it `static` and call it via the type name.
+- **GeneratedRegexAttribute:** Prefer `[GeneratedRegex]` over `new Regex(...)` / `Regex.Match(...)` for app regexes so the implementation is generated at compile-time.
+- **CA1822 (Mark Members As Static):** If a member does not access instance data, mark it `static`, update call sites to use the type name, and do it immediately in the same PR/change.
+- **CA1826 (Avoid LINQ On Indexable Collections):** For arrays/lists, avoid `Enumerable.*` when a direct member exists (prefer `.Count`/`.Length`, indexing, `Contains`, etc.).
 - **CA1866 (Single Character Strings):** Use char literals instead of single-character string literals. `text.StartsWith('{')` not `text.StartsWith("{")`.
 - **IDE0019 (Pattern Matching):** Prefer pattern matching over `as` + null-check (e.g., `if (x is not T t) { return; }`).
 - **Async Naming:** Do not suffix our methods with `Async` (e.g., use `GetUser()` not `GetUserAsync()`), even if they return `Task`/`Task<T>`. **Exception:** keep `*Async` when required by an interface/override/framework contract (e.g., `GetAuthenticationStateAsync`, `DisposeAsync`, Blazor lifecycle overrides).
 - **IDE0037 (Member Simplification):** Use implicit member names: `new { Prop }`
 - **IDE0270 (Null Checks):** Prefer null-coalescing throw: `var x = y ?? throw new Exception();`
 - **IDE0305 (Collections):** Prefer collection expressions over explicit constructors/methods:
-  - Initialization: `List<int> x = [1, 2, 3];` not `new List<int> { 1, 2, 3 }`
-  - Spread: `[.. items]` not `items.ToList()`
-  - Empty: `[]` not `new List<T>()`
-  - **Exception:** Avoid collection expressions inside expression trees (e.g., EF Core LINQ queries). Use `.ToList()` / explicit construction instead.
+	- Initialization: `List<int> x = [1, 2, 3];` not `new List<int> { 1, 2, 3 }`
+	- Spread: `[.. items]` not `items.ToList()`
+	- Empty: `[]` not `new List<T>()`
+	- **Exception:** Avoid collection expressions inside expression trees (e.g., EF Core LINQ queries). Use `.ToList()` / explicit construction instead.
 
 ### Configuration & Hardcoded Defaults
 - **Do not refactor existing hardcoded strings/defaults into configuration** (e.g., `appsettings.json`, `IConfiguration`, options classes, env vars) unless explicitly requested.
@@ -72,8 +74,8 @@ Follow these guidelines when generating code or answering questions.
 - **No Design Package:** Do not add `Microsoft.EntityFrameworkCore.Design` package.
 - **Entity Classes:** Simple POCOs without property initializers. Navigation properties should not be initialized.
 - **Service Layer:** Create a service layer (e.g., `HomeOpsService`) between EF Core DbContext and API endpoints.
-  - Service methods should be async and return entities directly.
-  - Endpoints map entities to shared DTOs when returning to clients.
+	- Service methods should be async and return entities directly.
+	- Endpoints map entities to shared DTOs when returning to clients.
 
 ## Testing & Validation
 - Ensure code compiles with the project’s analyzers and strict checks.
