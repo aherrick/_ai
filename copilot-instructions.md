@@ -48,8 +48,9 @@ Follow these guidelines when generating code or answering questions.
 - **RCS1037 (Whitespace):** No trailing whitespace on any line.
 - **RCS1261 (Async Disposal):** Use async disposal when it exists and performs I/O (streams, network, file). `MemoryStream` is fine synchronously.
 - **GeneratedRegexAttribute:** Prefer `[GeneratedRegex]` over `new Regex(...)` / `Regex.Match(...)` for app regexes so the implementation is generated at compile-time.
-- **CA1822 (Mark Members As Static):** If a member does not access instance data, mark it `static`, update call sites to use the type name, and do it immediately in the same PR/change.
+- **CA1822 (Mark Members As Static):** If a member does not access instance data, mark it `static`, update call sites to use the type name, and do it immediately in the same PR/change. **Exception:** Do NOT mark `[RelayCommand]` methods as static — the MVVM Toolkit source generator requires them to be instance methods.
 - **CA1826 (Avoid LINQ On Indexable Collections):** For arrays/lists, avoid `Enumerable.*` when a direct member exists (prefer `.Count`/`.Length`, indexing, `Contains`, etc.).
+- **CA1868 (Collection Remove Guard):** Do not guard `ICollection<T>.Remove(item)` with `Contains(item)`; call `Remove(item)` directly.
 - **CA1866 (Single Character Strings):** Use char literals instead of single-character string literals. `text.StartsWith('{')` not `text.StartsWith("{")`.
 - **IDE0019 (Pattern Matching):** Prefer pattern matching over `as` + null-check (e.g., `if (x is not T t) { return; }`).
 - **Async Naming:** Do not suffix our methods with `Async` (e.g., use `GetUser()` not `GetUserAsync()`), even if they return `Task`/`Task<T>`. **Exception:** keep `*Async` when required by an interface/override/framework contract (e.g., `GetAuthenticationStateAsync`, `DisposeAsync`, Blazor lifecycle overrides).
