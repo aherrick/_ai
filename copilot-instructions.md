@@ -19,10 +19,11 @@ Follow these guidelines when generating code or answering questions.
 - **Dependencies:** Do not introduce new NuGet packages or frameworks unless explicitly requested.
 
 ### Constructors & DI
-- **Primary Constructors:** Prefer primary constructors for DI-friendly services and simple classes.
-	- Use regular constructors only when required (inheritance/base chaining, multiple constructors, attributes/serialization, tooling constraints).
+- **Primary Constructors:** Prefer primary constructors for DI-friendly services and simple classes. Primary constructors also work with base class inheritance — use `class Foo(int x) : Base(x)` as needed.
+	- Use regular constructors only when required (multiple constructors, attributes/serialization, tooling constraints like XAML code-behind with `InitializeComponent()`).
 	- *Bad:* `public class Service { private readonly IHttp _http; public Service(IHttp http) { _http = http; } }`
 	- *Good:* `public class Service(IHttp http)`
+	- *Good with base class:* `public class MyList(string name) : ObservableCollection<Item>` — initialize fields/properties via `= parameter` in the body
 
 ### Namespaces
 - **File-scoped namespaces only:** `namespace My.Namespace;`
@@ -44,7 +45,7 @@ Follow these guidelines when generating code or answering questions.
 - **Always use curly braces `{}`** for all conditionals (`if/else/foreach/while`), even single-line bodies.
 
 ## Code Analysis & Simplification
-- **RCS1021 (Expression Body):** Prefer expression-bodied members for simple, single-expression methods/properties.
+- **IDE0004 (Redundant Cast):** Do not cast value types or strings to `object` explicitly (e.g., `(object)false`, `(object)"text"`). Implicit boxing is automatic in C# and clearer.
 - **RCS1037 (Whitespace):** No trailing whitespace on any line.
 - **RCS1261 (Async Disposal):** Use async disposal when it exists and performs I/O (streams, network, file). `MemoryStream` is fine synchronously.
 - **GeneratedRegexAttribute:** Prefer `[GeneratedRegex]` over `new Regex(...)` / `Regex.Match(...)` for app regexes so the implementation is generated at compile-time.
@@ -53,6 +54,7 @@ Follow these guidelines when generating code or answering questions.
 - **CA1868 (Collection Remove Guard):** Do not guard `ICollection<T>.Remove(item)` with `Contains(item)`; call `Remove(item)` directly.
 - **CA1866 (Single Character Strings):** Use char literals instead of single-character string literals. `text.StartsWith('{')` not `text.StartsWith("{")`.
 - **IDE0019 (Pattern Matching):** Prefer pattern matching over `as` + null-check (e.g., `if (x is not T t) { return; }`).
+- **IDE0031 (Null Check Simplification):** Prefer null-conditional access for simple guarded member access/assignment (e.g., `Application.Current?.UserAppTheme = Theme;`) instead of wrapping it in an `if (x is not null)` block.
 - **Async Naming:** Do not suffix our methods with `Async` (e.g., use `GetUser()` not `GetUserAsync()`), even if they return `Task`/`Task<T>`. **Exception:** keep `*Async` when required by an interface/override/framework contract (e.g., `GetAuthenticationStateAsync`, `DisposeAsync`, Blazor lifecycle overrides).
 - **IDE0037 (Member Simplification):** Use implicit member names: `new { Prop }`
 - **IDE0270 (Null Checks):** Prefer null-coalescing throw: `var x = y ?? throw new Exception();`
